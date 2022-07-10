@@ -51,7 +51,7 @@ public class FirstFile extends JFrame {
 
     Font lfont = new Font("宋体", Font.BOLD, 25);
 
-    public  FirstFile(){
+    public FirstFile(){
         setTitle("首页");
         setLayout(null);
         setBounds(JFRAME_X, JFRAME_Y, JFRAME_WIDTH, JFRAME_HEIGHT);
@@ -66,7 +66,10 @@ public class FirstFile extends JFrame {
         rowPanel.setLayout(null);
         rowPanel.setBounds(0,0,JFRAME_WIDTH, JFRAME_HEIGHT/10);
         rowPanel.setBackground(bgColor());
+
+
         rowPanelPrint(rowPanel);
+
         rowPanel.setBackground(bgColor());
         add(rowPanel);
 
@@ -323,7 +326,7 @@ public class FirstFile extends JFrame {
         darkColor = new Color(0,0,0);
         lightColor = new Color(255,255,255);
 
-        return lightColor;
+        return darkColor;
     }
 
         public static void main(String[] args) {

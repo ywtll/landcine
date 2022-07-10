@@ -3,7 +3,6 @@ package Dao;
 import Model.DZ_Member;
 
 /**
- * ”√ªß±Ì
  * @author 712f
  */
 import java.util.List;
