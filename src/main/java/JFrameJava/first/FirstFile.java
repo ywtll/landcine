@@ -326,7 +326,7 @@ public class FirstFile extends JFrame {
         darkColor = new Color(0,0,0);
         lightColor = new Color(255,255,255);
 
-        return darkColor;
+        return lightColor;
     }
 
         public static void main(String[] args) {
