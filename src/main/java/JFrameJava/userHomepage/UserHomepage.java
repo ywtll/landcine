@@ -3,6 +3,7 @@ package JFrameJava.userHomepage;
 
 import Dao.DButil;
 import Dao.Dao_Member;
+import Dao.TheTheme;
 import Dao.baiduOcr.FileChooserOCR2;
 import Dao.baiduOcr.ScreenShotTest;
 import Model.DZ_Member;
@@ -20,19 +21,32 @@ import java.util.List;
  */
 public class UserHomepage extends JFrame {
 
-    // 邮箱id
-    static String emailIDImage;
+    /**
+     * 邮箱id
+     */
+    String emailIDImage;
+
+    /**
+     * 首页传过来的JFrame
+     */
     JFrame firstFile;
+
+    /**
+     * 自身JFrame
+     */
     JFrame jf = this;
 
-
-    Color darkColor;
-    Color lightColor;
-
+    /**
+     * 连接数据库
+     * @implNote 防止第一次加载的卡顿
+     */
     static {
         DButil.getConnection();
     }
 
+    /**
+     * 窗体的位置和大小
+     */
     static final int JFRAME_X = 200;
     static final int JFRAME_Y = 100;
     static final int JFRAME_WIDTH = 1200;
@@ -41,186 +55,215 @@ public class UserHomepage extends JFrame {
     public UserHomepage(String emailIDImage, JFrame firstFile) {
         this.firstFile = firstFile;
         setTitle("User Homepage");
-        UserHomepage.emailIDImage = emailIDImage;
+        // 将首页的邮箱id传过来
+        this.emailIDImage = emailIDImage;
         setLayout(null);
         setBounds(JFRAME_X, JFRAME_Y, JFRAME_WIDTH, JFRAME_HEIGHT);
 
+        // 初始化
         init();
 
+        // 初始化主题
+        theme();
 
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     /**
-     * 主题
+     * @implNote 初始化主题
      */
-    private Color bgColor() {
-        darkColor = new Color(0,0,0);
-        lightColor = new Color(255,255,255);
+    private void theme() {
+        TheTheme theme = new TheTheme(1);
 
-        return lightColor;
+        // 导航区域
+        rowPanel.setBackground(theme.getColorBg());
+        // 头像区域
+        iconPanel.setBackground(theme.getColorBg());
+        // 内容区域
+        contentPanel.setBackground(theme.getColorBg());
+        // 列表区域
+        listPanel.setBackground(theme.getColorBg());
+
+        // OCR
+        ocr.setBackground(theme.getColorBg());
+
+        // 搜索栏
+        search.setColorBg(theme.getColorBg());
+        search.setColorFont(theme.getColorFont());
     }
 
+
+    /**
+     * 导航区域
+     */
+    JPanel rowPanel;
+    /**
+     * 头像区域
+     */
+    JPanel iconPanel;
+    /**
+     * 内容
+     */
+    JPanel contentPanel;
+    /**
+     * 列表区域
+     */
+    JPanel listPanel;
     /**
      * init
      */
     private void init() {
         // 导航区域
-        JPanel rowPanel = new JPanel();
+        rowPanel = new JPanel();
         rowPanel.setLayout(null);
         rowPanel.setBounds(0,0,JFRAME_WIDTH, JFRAME_HEIGHT/10);
-        rowPanelPrint(rowPanel);
+        rowPanelPrint();
         add(rowPanel);
 
 
         // 头像区域
-        JPanel iconPanel = new JPanel();
+        iconPanel = new JPanel();
         iconPanel.setBounds(0,JFRAME_HEIGHT/10,JFRAME_WIDTH/4, JFRAME_HEIGHT/4);
         setLayout(null);
-        iconPanelPrint(iconPanel);
+        iconPanelPrint();
         add(iconPanel);
 
 
         // 内容
-        JPanel contentPanel = new JPanel();
+        contentPanel = new JPanel();
         contentPanel.setLayout(null);
         contentPanel.setBounds(JFRAME_WIDTH/4,JFRAME_HEIGHT/10,JFRAME_WIDTH - JFRAME_WIDTH/4, JFRAME_HEIGHT - JFRAME_HEIGHT/10);
         add(contentPanel);
 
 
         // 列表区域
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         rowPanel.setLayout(null);
         listPanel.setBounds(0,JFRAME_HEIGHT/10 + JFRAME_HEIGHT/4,JFRAME_WIDTH/4, JFRAME_HEIGHT - JFRAME_HEIGHT/4- JFRAME_HEIGHT/10);
-        listPanelPrint(listPanel,contentPanel);
+        listPanelPrint();
         add(listPanel);
-
-
-        rowPanel.setBackground(bgColor());
-        iconPanel.setBackground(bgColor());
-        contentPanel.setBackground(bgColor());
-        listPanel.setBackground(bgColor());
     }
 
+
+    /**
+     * 个人信息
+     */
+    MenuButton information;
+    /**
+     * 历史记录
+     */
+    MenuButton history;
+    /**
+     * 钱包
+     */
+    MenuButton wallet;
+    /**
+     * 人工热线
+     */
+    MenuButton hotline;
     /**
      * 列表区域
-     * @param lp
-     * @param cp
      */
-    private void listPanelPrint(JPanel lp, JPanel cp) {
-        lp.setLayout(null);
+    private void listPanelPrint() {
+        listPanel.setLayout(null);
 
-        MenuButton information = new MenuButton(new ImageIcon("film/userHomeImg/information.png"), "个人信息", 0, 0);
-        MenuButton history = new MenuButton(new ImageIcon("film/userHomeImg/history.png"), "历史记录", 0, 0);
-        MenuButton wallet = new MenuButton(new ImageIcon("film/userHomeImg/wallet.png"), "    钱包", 0, 0);
-        MenuButton hotline = new MenuButton(new ImageIcon("film/userHomeImg/hotline.png"), "人工热线", 0, 0);
+        information = new MenuButton(new ImageIcon("film/userHomeImg/information.png"), "个人信息", 0, 0);
+        history = new MenuButton(new ImageIcon("film/userHomeImg/history.png"), "历史记录", 0, 0);
+        wallet = new MenuButton(new ImageIcon("film/userHomeImg/wallet.png"), "    钱包", 0, 0);
+        hotline = new MenuButton(new ImageIcon("film/userHomeImg/hotline.png"), "人工热线", 0, 0);
 
-        information.setBounds(0,0,lp.getWidth(),lp.getHeight()/8);
-        history.setBounds(0,lp.getHeight()/8,lp.getWidth(),lp.getHeight()/8);
-        wallet.setBounds(0,lp.getHeight()/8*2,lp.getWidth(),lp.getHeight()/8);
-        hotline.setBounds(0,lp.getHeight()/8*3,lp.getWidth(),lp.getHeight()/8);
+        // 设置位置和大小
+        information.setBounds(0,0,listPanel.getWidth(),listPanel.getHeight()/8);
+        history.setBounds(0,listPanel.getHeight()/8,listPanel.getWidth(),listPanel.getHeight()/8);
+        wallet.setBounds(0,listPanel.getHeight()/8*2,listPanel.getWidth(),listPanel.getHeight()/8);
+        hotline.setBounds(0,listPanel.getHeight()/8*3,listPanel.getWidth(),listPanel.getHeight()/8);
 
-        lp.add(information);
-        lp.add(history);
-        lp.add(wallet);
-        lp.add(hotline);
+        listPanel.add(information);
+        listPanel.add(history);
+        listPanel.add(wallet);
+        listPanel.add(hotline);
 
+        //列表各个按钮的点击事件
         // 个人信息
         information.addActionListener(e -> {
-            cp.removeAll();
-            new InformationPanel(cp,emailIDImage,jf);
-            cp.repaint();
+            contentPanel.removeAll();
+            new InformationPanel(contentPanel,emailIDImage,jf);
+            contentPanel.repaint();
         });
 
         // 历史记录
         history.addActionListener(e -> {
-            cp.removeAll();
-            new HistoryPanel(cp,emailIDImage);
-            cp.repaint();
+            contentPanel.removeAll();
+            new HistoryPanel(contentPanel,emailIDImage);
+            contentPanel.repaint();
         });
 
         // 钱包
         wallet.addActionListener(e -> {
-            cp.removeAll();
-            new WalletPanel(cp,emailIDImage);
-            cp.repaint();
+            contentPanel.removeAll();
+            new WalletPanel(contentPanel,emailIDImage);
+            contentPanel.repaint();
         });
 
         // 人工
         hotline.addActionListener(e -> {
-            cp.removeAll();
-            new HotlinePanel(cp,emailIDImage);
-            cp.repaint();
+            contentPanel.removeAll();
+            new HotlinePanel(contentPanel,emailIDImage);
+            contentPanel.repaint();
         });
 
-
-        lp.setBackground(bgColor());
-        cp.setBackground(bgColor());
-
     }
+
+
 
     /**
      * 头像区域
-     * @param ip
      */
-    private void iconPanelPrint(JPanel ip) {
-        ip.setLayout(null);
+    private void iconPanelPrint() {
+        iconPanel.setLayout(null);
         List<DZ_Member> members = Dao_Member.Member_Query(emailIDImage);
         ImageIcon imgIcon = new ImageIcon(members.get(0).getU_Icon());
-        imgIcon.setImage(imgIcon.getImage().getScaledInstance(ip.getHeight(),ip.getHeight(),Image.SCALE_DEFAULT));
+        imgIcon.setImage(imgIcon.getImage().getScaledInstance(iconPanel.getHeight(),iconPanel.getHeight(),Image.SCALE_DEFAULT));
         JLabel icon = new JLabel(imgIcon);
-        icon.setBounds(ip.getWidth()/2 - 30, 50,50,50);
+        icon.setBounds(iconPanel.getWidth()/2 - 30, 50,50,50);
 
         JLabel name = new JLabel(members.get(0).getU_Name());
         name.setFont(new Font("微软雅黑", Font.BOLD,20));
-        name.setBounds(ip.getWidth()/2 - 30, 100,60,30);
+        name.setBounds(iconPanel.getWidth()/2 - 30, 100,60,30);
 
-        ip.add(icon);
-        ip.add(name);
+        iconPanel.add(icon);
+        iconPanel.add(name);
 
     }
 
+
+    ImageIcon imgIcon;
+    JLabel logo;
+    JPanel type;
+    SearchTextField search;
+    JButton ocr;
+    ImageIcon imgLogo;
+    JLabel icon;
+
+
     /**
      * 导航区域
-     * @param rp
      */
-    private void rowPanelPrint(JPanel rp) {
-        rp.setLayout(null);
+    private void rowPanelPrint() {
+        rowPanel.setLayout(null);
         // logo
-        ImageIcon imgIcon = new ImageIcon("film/loginimg/logo.png");
-        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rp.getHeight(),rp.getHeight(),Image.SCALE_DEFAULT));
-        JLabel logo = new JLabel(imgIcon);
-        logo.setBounds(rp.getHeight()/2,0,rp.getHeight(),rp.getHeight());
-        rp.add(logo);
-
-        // 分类
-        JPanel type = new JPanel();
-        type.setBounds(rp.getHeight() + rp.getHeight(),rp.getHeight()/4,rp.getWidth()/8, rp.getHeight());
-        JLabel frontPage = new JLabel("首页");
-        frontPage.setFont(new Font("微软雅黑", Font.BOLD, type.getHeight()/3));
-        type.add(frontPage);
-
-        type.setBackground(bgColor());
-
-        rp.add(type);
-
-        type.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                firstFile.setVisible(true);
-                jf.dispose();
-            }
-        });
-
-
+        imgIcon = new ImageIcon("film/loginimg/logo.png");
+        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(),Image.SCALE_DEFAULT));
+        logo = new JLabel(imgIcon);
+        logo.setBounds(rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
+        rowPanel.add(logo);
 
 
         // 搜索框
-        SearchTextField search = new SearchTextField(new ImageIcon("film/img/search1.png"),rp.getWidth()/3,rp.getHeight()/2,bgColor());
-        search.setBounds(rp.getHeight() + rp.getHeight() + rp.getWidth()/8,rp.getHeight()/4, rp.getWidth()/3,rp.getHeight()/2);
-        rp.add(search);
+        search = new SearchTextField(new ImageIcon("film/img/search1.png"),rowPanel.getWidth()/3,rowPanel.getHeight()/2);
+        search.setBounds(rowPanel.getHeight() + rowPanel.getHeight() + rowPanel.getWidth()/8,rowPanel.getHeight()/4, rowPanel.getWidth()/3,rowPanel.getHeight()/2);
+        rowPanel.add(search);
 
 
         // 语音识别模块
@@ -228,12 +271,11 @@ public class UserHomepage extends JFrame {
 
 
 
-        // 图片转文字模块
 
-        JButton ocr = new JButton(new ImageIcon("film/Walletimg/iconText.png"));
-        ocr.setBackground(bgColor());
-        ocr.setBounds( rp.getHeight()*2 +  rp.getWidth()/3*2,rp.getHeight()/4 ,rp.getHeight()/2,rp.getHeight()/2);
-        rp.add(ocr);
+        // 图片转文字模块
+        ocr = new JButton(new ImageIcon("film/Walletimg/iconText.png"));
+        ocr.setBounds( rowPanel.getHeight()*2 +  rowPanel.getWidth()/3*2,rowPanel.getHeight()/4 ,rowPanel.getHeight()/2,rowPanel.getHeight()/2);
+        rowPanel.add(ocr);
 
 
         ocr.addActionListener(e -> {
@@ -268,11 +310,11 @@ public class UserHomepage extends JFrame {
 
         // 头像
         List<DZ_Member> dz_members = Dao_Member.Member_Query(emailIDImage);
-        ImageIcon imgLogo  = new ImageIcon(dz_members.get(0).getU_Icon());
-        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rp.getHeight(),rp.getHeight(),Image.SCALE_DEFAULT));
-        JLabel icon = new JLabel(imgLogo);
-        icon.setBounds(rp.getWidth() - rp.getHeight() -rp.getHeight()/2,0,rp.getHeight(),rp.getHeight());
-        rp.add(icon);
+        imgLogo  = new ImageIcon(dz_members.get(0).getU_Icon());
+        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(),Image.SCALE_DEFAULT));
+        icon = new JLabel(imgLogo);
+        icon.setBounds(rowPanel.getWidth() - rowPanel.getHeight() -rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
+        rowPanel.add(icon);
 
     }
 
