@@ -37,6 +37,11 @@ public class UserHomepage extends JFrame {
     JFrame jf = this;
 
     /**
+     * OCR
+     */
+    Boolean isMyOCR = false;
+
+    /**
      * 连接数据库
      * @implNote 防止第一次加载的卡顿
      */
@@ -75,7 +80,6 @@ public class UserHomepage extends JFrame {
      */
     private void theme() {
         TheTheme theme = new TheTheme(1);
-
         // 导航区域
         rowPanel.setBackground(theme.getColorBg());
         // 头像区域
@@ -245,8 +249,6 @@ public class UserHomepage extends JFrame {
     JButton ocr;
     ImageIcon imgLogo;
     JLabel icon;
-
-
     /**
      * 导航区域
      */
@@ -279,30 +281,31 @@ public class UserHomepage extends JFrame {
 
 
         ocr.addActionListener(e -> {
-            FileChooserOCR2 OCR = new FileChooserOCR2();
-            OCR.setVisible(false);
-            new ScreenShotTest(OCR);
-            Thread th = new Thread(
-                    () -> {
-                        while (true) {
-                            if ("输出内容。。。".equals(OCR.getOcrText())) {
-                                System.out.println("正在识别中...");
-                            } else {
-                                try {
-                                    Thread.sleep(200);
-                                } catch (InterruptedException ex) {
-                                    ex.printStackTrace();
+            if (isMyOCR) {
+                FileChooserOCR2 OCR = new FileChooserOCR2();
+                OCR.setVisible(false);
+                new ScreenShotTest(OCR);
+                Thread th = new Thread(
+                        () -> {
+                            while (true) {
+                                if ("输出内容。。。".equals(OCR.getOcrText())) {
+                                    System.out.println("正在识别中...");
+                                } else {
+                                    try {
+                                        Thread.sleep(200);
+                                    } catch (InterruptedException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                    String ocrText = OCR.getOcrText();
+                                    System.out.println(ocrText);
+                                    search.setJf(ocrText);
+                                    break;
                                 }
-                                String ocrText = OCR.getOcrText();
-                                System.out.println(ocrText);
-                                search.setJf(ocrText);
-                                break;
                             }
                         }
-                    }
-            );
-            th.start();
-
+                );
+                th.start();
+            }
         });
 
 
