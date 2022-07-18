@@ -55,77 +55,47 @@ public class FirstFile extends JFrame {
         setTitle("首页");
         setLayout(null);
         setBounds(JFRAME_X, JFRAME_Y, JFRAME_WIDTH, JFRAME_HEIGHT);
-        init(userName);
+
+        init();
+
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void init(String userName2) {
-        List<DZ_Member> dz_members = Dao_Member.Member_Query(userName2);
-        JPanel rowPanel = new JPanel();
+    List<DZ_Member> dz_members;
+    JPanel rowPanel;
+
+    JPanel slideshow;
+
+
+    private void init() {
+        dz_members = Dao_Member.Member_Query(userName);
+        rowPanel = new JPanel();
         rowPanel.setLayout(null);
         rowPanel.setBounds(0,0,JFRAME_WIDTH, JFRAME_HEIGHT/10);
         rowPanel.setBackground(bgColor());
-
-
-        rowPanelPrint(rowPanel);
-
-        rowPanel.setBackground(bgColor());
+        rowPanelPrint();
         add(rowPanel);
 
 
-        Vector<DZ_Movie_Information> all = Dao_Movie_Information.getAll();
-        Vector<DZ_Movie_Hot> hotall = Dao_Movie_Hot.getAll();
 
-        //获取电影id
-        List<Integer> idList = new ArrayList<>();
-        for (DZ_Movie_Information e : all) {
-            idList.add(e.getY_Id());
-        }
 
-        //获取电影名字
-        List<String> nameList = new ArrayList<>();
-        for (DZ_Movie_Information e : all) {
-            nameList.add(e.getY_Name());
-        }
-        //获取电影封面地址
-        List<String> Y_Movie_CoverList = new ArrayList<>();
-        for (DZ_Movie_Information e : all) {
-            Y_Movie_CoverList.add(e.getY_Movie_Cover());
-        }
-
-        ArrayList<DZ_Movie_Information> filmList=new ArrayList<>();
-        for (int i = 0; i <idList.size() ; i++) {
-            String name=nameList.get(i);
-            String movie_cover=Y_Movie_CoverList.get(i);
-            DZ_Movie_Information film1 = new DZ_Movie_Information(i,name,movie_cover);
-            filmList.add(film1);
-        }
         //幻灯片面板
-        JPanel bp=new JPanel();
-        bp.setLayout(null);
-        bp.setBackground(lightColor);
-        bp.setBounds(0,80,1200,330);
-        BannerPanl bannerPanl=new BannerPanl(filmList,800,330);
-        //开始播放幻灯片
-        bannerPanl.start();
-        //幻灯片标题面板
-        JPanel titlePanel =bannerPanl.addTitlePanel(dz_members.get(0).getU_Id());
+        slideshow=new JPanel();
+        slideshow.setLayout(null);
+        slideshow.setBackground(lightColor);
+        slideshow.setBounds(0,80,1200,330);
+        slideshowPrint();
+        add(slideshow);
 
-        bannerPanl.setBackground(bgColor());
-        titlePanel.setBackground(bgColor());
 
-        bp.add(bannerPanl);
-        bp.add(titlePanel);
+
 
         //内容面板
         JPanel contentp=new JPanel();
         contentp.setPreferredSize(new Dimension(970,500));
         contentp.setLayout(null);
         contentp.setBackground(Color.CYAN);
-
-        bp.setBackground(bgColor());
-        add(bp);
 
         JPanel todayp=new JPanel();
         todayp.setLayout(null);
@@ -173,35 +143,87 @@ public class FirstFile extends JFrame {
         add(filmp);
     }
 
+    Vector<DZ_Movie_Information> all;
+    Vector<DZ_Movie_Hot> hotall;
+    List<Integer> idList = new ArrayList<>();
+    List<String> nameList = new ArrayList<>();
+    List<String> Y_Movie_CoverList = new ArrayList<>();
+    ArrayList<DZ_Movie_Information> filmList=new ArrayList<>();
+    BannerPanl bannerPanl;
+    JPanel titlePanel;
+    /**
+     * 幻灯片面板
+     */
+    private void slideshowPrint() {
+        all = Dao_Movie_Information.getAll();
+        hotall = Dao_Movie_Hot.getAll();
+
+        //获取电影id
+        for (DZ_Movie_Information e : all) {
+            idList.add(e.getY_Id());
+        }
+
+        //获取电影名字
+        for (DZ_Movie_Information e : all) {
+            nameList.add(e.getY_Name());
+        }
+        //获取电影封面地址
+        for (DZ_Movie_Information e : all) {
+            Y_Movie_CoverList.add(e.getY_Movie_Cover());
+        }
+
+        for (int i = 0; i <idList.size() ; i++) {
+            String name = nameList.get(i);
+            String movie_cover = Y_Movie_CoverList.get(i);
+            DZ_Movie_Information film1 = new DZ_Movie_Information(i,name,movie_cover);
+            filmList.add(film1);
+        }
+
+
+        bannerPanl=new BannerPanl(filmList,800,330);
+        //开始播放幻灯片
+        bannerPanl.start();
+        //幻灯片标题面板
+        titlePanel =bannerPanl.addTitlePanel(dz_members.get(0).getU_Id());
+
+        bannerPanl.setBackground(bgColor());
+        titlePanel.setBackground(bgColor());
+        slideshow.setBackground(bgColor());
+
+
+        slideshow.add(bannerPanl);
+        slideshow.add(titlePanel);
+
+    }
+
     /**
      * 导航
-     * @param rp
      */
-    private void rowPanelPrint(JPanel rp) {
-        rp.setLayout(null);
-        rp.setBackground(lightColor);
+    private void rowPanelPrint() {
+        rowPanel.setLayout(null);
+        rowPanel.setBackground(lightColor);
         // logo
         ImageIcon imgIcon = new ImageIcon("film/loginimg/logo.png");
-        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rp.getHeight(),rp.getHeight(), Image.SCALE_DEFAULT));
+        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(), Image.SCALE_DEFAULT));
         JLabel logo = new JLabel(imgIcon);
-        logo.setBounds(rp.getHeight()/2,0,rp.getHeight(),rp.getHeight());
-        rp.add(logo);
+        logo.setBounds(rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
+        rowPanel.add(logo);
 
         // 分类
         JPanel type = new JPanel();
-        type.setBounds(rp.getHeight() + rp.getHeight(),rp.getHeight()/4,rp.getWidth()/8, rp.getHeight());
+        type.setBounds(rowPanel.getHeight() + rowPanel.getHeight(),rowPanel.getHeight()/4,rowPanel.getWidth()/8, rowPanel.getHeight());
         JLabel frontPage = new JLabel("首页");
         frontPage.setFont(new Font("微软雅黑", Font.BOLD, type.getHeight()/3));
         type.add(frontPage);
 
         type.setBackground(bgColor());
-        rp.add(type);
+        rowPanel.add(type);
 
 
         // 搜索框
-        SearchTextField search = new SearchTextField(new ImageIcon("film/img/search1.png"),rp.getWidth()/3,rp.getHeight()/2,bgColor());
-        search.setBounds(rp.getHeight() + rp.getHeight() + rp.getWidth()/8,rp.getHeight()/4, rp.getWidth()/3,rp.getHeight()/2);
-        rp.add(search);
+        SearchTextField search = new SearchTextField(new ImageIcon("film/img/search1.png"),rowPanel.getWidth()/3,rowPanel.getHeight()/2,bgColor());
+        search.setBounds(rowPanel.getHeight() + rowPanel.getHeight() + rowPanel.getWidth()/8,rowPanel.getHeight()/4, rowPanel.getWidth()/3,rowPanel.getHeight()/2);
+        rowPanel.add(search);
 
 
         // 语音识别模块
@@ -213,8 +235,8 @@ public class FirstFile extends JFrame {
 
         JButton ocr = new JButton(new ImageIcon("film/Walletimg/iconText.png"));
         ocr.setBackground(lightColor);
-        ocr.setBounds( rp.getHeight()*2 +  rp.getWidth()/3*2,rp.getHeight()/4 ,rp.getHeight()/2,rp.getHeight()/2);
-        rp.add(ocr);
+        ocr.setBounds( rowPanel.getHeight()*2 +  rowPanel.getWidth()/3*2,rowPanel.getHeight()/4 ,rowPanel.getHeight()/2,rowPanel.getHeight()/2);
+        rowPanel.add(ocr);
 
 
         ocr.addActionListener(e -> {
@@ -250,10 +272,10 @@ public class FirstFile extends JFrame {
         // 头像
         List<DZ_Member> dz_members = Dao_Member.Member_Query(userName);
         imgLogo = new ImageIcon(dz_members.get(0).getU_Icon());
-        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rp.getHeight()/2,rp.getHeight()/2,Image.SCALE_DEFAULT));
+        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rowPanel.getHeight()/2,rowPanel.getHeight()/2,Image.SCALE_DEFAULT));
         JLabel icon = new JLabel(imgLogo);
-        icon.setBounds(rp.getWidth() - rp.getHeight() -rp.getHeight()/2,0,rp.getHeight(),rp.getHeight());
-        rp.add(icon);
+        icon.setBounds(rowPanel.getWidth() - rowPanel.getHeight() -rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
+        rowPanel.add(icon);
 
 
         // 隐形的按钮
@@ -329,8 +351,8 @@ public class FirstFile extends JFrame {
         return lightColor;
     }
 
-        public static void main(String[] args) {
-            new FirstFile();
+    public static void main(String[] args) {
+        new FirstFile();
     }
 
 

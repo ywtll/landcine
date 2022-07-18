@@ -158,32 +158,31 @@ public class BannerPanl extends JPanel {
     public void start(){
         timer.schedule(tt,1000,5000);
     }
-/*    public static void main(String[] args) {
-        JFrame jf=new JFrame("滚动面板");
-
-        DZ_Movie_Information film1 = new DZ_Movie_Information();
-        DZ_Movie_Information film2 = new DZ_Movie_Information("ni hao", "ni hao", icon2, "ni hao", 10, 10);
-        DZ_Movie_Information film3 = new DZ_Movie_Information("ni hao", "ni hao", icon3, "ni hao", 10, 10);
-
-        ArrayList<DZ_Movie_Information> flist=new ArrayList<>();
-        flist.add(film1);
-        flist.add(film2);
-        flist.add(film3);
-
-        BannerPanl bannerPanl = new BannerPanl(flist, 658, 970);
-        bannerPanl.setLocation(0,300);
-        JPanel titlePanel = bannerPanl.addTitlePanel();
-        jf.setLayout(null);
-        jf.setBounds(100,100,658,1270);
-
-        jf.add(bannerPanl);
-        jf.add(titlePanel);
-
-        jf.setVisible(true);
-//        jf.setDefaultCloseOperation();
-        bannerPanl.timer.schedule(bannerPanl.tt,1000,5000);
-
-    }*/
+//    public static void main(String[] args) {
+//        JFrame jf=new JFrame("滚动面板");
+//
+//        DZ_Movie_Information film1 = new DZ_Movie_Information();
+//        DZ_Movie_Information film2 = new DZ_Movie_Information("ni hao", "ni hao", icon2, "ni hao", 10, 10);
+//        DZ_Movie_Information film3 = new DZ_Movie_Information("ni hao", "ni hao", icon3, "ni hao", 10, 10);
+//
+//        ArrayList<DZ_Movie_Information> flist=new ArrayList<>();
+//        flist.add(film1);
+//        flist.add(film2);
+//        flist.add(film3);
+//
+//        BannerPanl bannerPanl = new BannerPanl(flist, 658, 970);
+//        bannerPanl.setLocation(0,300);
+//        JPanel titlePanel = bannerPanl.addTitlePanel();
+//        jf.setLayout(null);
+//        jf.setBounds(100,100,658,1270);
+//
+//        jf.add(bannerPanl);
+//        jf.add(titlePanel);
+//
+//        jf.setVisible(true);
+////        jf.setDefaultCloseOperation();
+//        bannerPanl.timer.schedule(bannerPanl.tt,1000,5000);
+//    }
 
 
 }
