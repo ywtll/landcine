@@ -6,7 +6,6 @@ import Dao.Dao_Movie_Information;
 import Dao.baiduOcr.FileChooserOCR2;
 import Dao.baiduOcr.ScreenShotTest;
 import JFrameJava.Briefintroduction.Introduction;
-import JFrameJava.bean.FilmInfo;
 import JFrameJava.login.Login;
 import JFrameJava.userHomepage.UserHomepage;
 import Model.DZ_Member;
@@ -38,7 +37,7 @@ public class FirstFile extends JFrame {
     static final int JFRAME_X = 200;
     static final int JFRAME_Y = 100;
     static final int JFRAME_WIDTH = 1200;
-    static final int JFRAME_HEIGHT = 820;
+    static final int JFRAME_HEIGHT = 840;
     FirstFile firstFile = this;
 
     static Login login;
@@ -64,11 +63,12 @@ public class FirstFile extends JFrame {
 
     List<DZ_Member> dz_members;
     JPanel rowPanel;
-
     JPanel slideshow;
+    JPanel content;
 
 
     private void init() {
+        // 导航栏
         dz_members = Dao_Member.Member_Query(userName);
         rowPanel = new JPanel();
         rowPanel.setLayout(null);
@@ -77,74 +77,60 @@ public class FirstFile extends JFrame {
         rowPanelPrint();
         add(rowPanel);
 
-
-
-
-        //幻灯片面板
+        // 轮播图
         slideshow=new JPanel();
         slideshow.setLayout(null);
-        slideshow.setBackground(lightColor);
-        slideshow.setBounds(0,80,1200,330);
+        slideshow.setBounds(0,JFRAME_HEIGHT/10,JFRAME_WIDTH,JFRAME_HEIGHT/2-JFRAME_HEIGHT/10);
         slideshowPrint();
         add(slideshow);
 
 
+        // 内容面板
+        content = new JPanel();
+        content.setLayout(null);
+        content.setBounds(0,JFRAME_HEIGHT/10+JFRAME_HEIGHT/2-JFRAME_HEIGHT/10,JFRAME_WIDTH,JFRAME_HEIGHT/2-JFRAME_HEIGHT/10);
+        contentPrint();
+        add(content);
 
 
-        //内容面板
-        JPanel contentp=new JPanel();
-        contentp.setPreferredSize(new Dimension(970,500));
-        contentp.setLayout(null);
-        contentp.setBackground(Color.CYAN);
-
-        JPanel todayp=new JPanel();
-        todayp.setLayout(null);
-        todayp.setBounds(0,400,1200,40);
-        todayp.setBackground(lightColor);
-        JLabel tol=new JLabel("今日热门");
-        tol.setFont(lfont);
-        tol.setForeground(Color.black);
-        tol.setBounds(30,10,200,30);
-
-        tol.setBackground(bgColor());
-        todayp.add(tol);
-
-        JPanel filmp=new JPanel();
-        filmp.setBounds(0,440,1200,360);
-        filmp.setLayout(new FlowLayout(FlowLayout.LEFT,70,0));
-        filmp.setBackground(lightColor);
+    }
 
 
+    /**
+     * 内容界面的标题文字
+     */
+    JLabel title;
+
+    Vector<DZ_Movie_Hot> hotal = Dao_Movie_Hot.getAll();
+    private void contentPrint() {
+        // 内容标题文字
+        title = new JLabel("猜你喜欢");
+        title.setBounds(50,5,200,30);
+        title.setFont(new Font("宋体", Font.BOLD, 25));
+        title.setForeground(Color.BLACK);
+        content.add(title);
+
+        // 内容图片
         for (int i = 0; i < 4; i++) {
-            ImageIcon icon1=new ImageIcon(hotall.get(i).getR_Movie_cover());
-            HotPanel p=new HotPanel(icon1,10,12,hotall.get(i).getR_Name());
+            ImageIcon icon = new ImageIcon(hotal.get(i).getR_Movie_cover());
+            HotPanel p = new HotPanel(icon, 10, 12, hotal.get(i).getR_Name());
             p.setPreferredSize(new Dimension(210,350));
-            int finalI = i;
-            List<DZ_Movie_Information> dz_movie_informations = Dao_Movie_Information.Movie_Information_Query(finalI);
+            p.setBounds(70+i*280,40,210,350);
+
             p.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    System.out.println(finalI);
-                    new Introduction(null,dz_movie_informations.get(0).getY_Id(), FirstFile.login.getReturnStatus());
+//                    super.mouseClicked(e);
                 }
             });
 
-            filmp.setBackground(bgColor());
-            filmp.add(p);
+            content.add(p);
         }
 
 
-        contentp.add(todayp);
-        contentp.add(filmp);
-        todayp.setBackground(bgColor());
-        filmp.setBackground(bgColor());
-
-        add(todayp);
-        add(filmp);
     }
 
     Vector<DZ_Movie_Information> all;
-    Vector<DZ_Movie_Hot> hotall;
     List<Integer> idList = new ArrayList<>();
     List<String> nameList = new ArrayList<>();
     List<String> Y_Movie_CoverList = new ArrayList<>();
@@ -156,44 +142,38 @@ public class FirstFile extends JFrame {
      */
     private void slideshowPrint() {
         all = Dao_Movie_Information.getAll();
-        hotall = Dao_Movie_Hot.getAll();
 
-        //获取电影id
-        for (DZ_Movie_Information e : all) {
+        all.forEach(e -> {
+            // 电影id
             idList.add(e.getY_Id());
-        }
-
-        //获取电影名字
-        for (DZ_Movie_Information e : all) {
+            // 电影名字
             nameList.add(e.getY_Name());
-        }
-        //获取电影封面地址
-        for (DZ_Movie_Information e : all) {
+            // 电影封面的地址
             Y_Movie_CoverList.add(e.getY_Movie_Cover());
-        }
+        });
 
-        for (int i = 0; i <idList.size() ; i++) {
+        for (int i = 0; i < idList.size(); i++) {
             String name = nameList.get(i);
-            String movie_cover = Y_Movie_CoverList.get(i);
-            DZ_Movie_Information film1 = new DZ_Movie_Information(i,name,movie_cover);
-            filmList.add(film1);
+            String url = Y_Movie_CoverList.get(i);
+            DZ_Movie_Information dz_movie_information = new DZ_Movie_Information(i, name, url);
+            filmList.add(dz_movie_information);
         }
 
-
-        bannerPanl=new BannerPanl(filmList,800,330);
-        //开始播放幻灯片
+//        bannerPanl = new BannerPanl(filmList, 800,380);
+        bannerPanl = new BannerPanl(filmList, JFRAME_WIDTH,JFRAME_HEIGHT/2);
+        // 开始播放幻灯片
         bannerPanl.start();
-        //幻灯片标题面板
-        titlePanel =bannerPanl.addTitlePanel(dz_members.get(0).getU_Id());
+        // 幻灯片标题面板
+        titlePanel = bannerPanl.addTitlePanel(dz_members.get(0).getU_Id());
+
+
+        titlePanel.setBackground(new Color(255,255,255,100));
 
         bannerPanl.setBackground(bgColor());
-        titlePanel.setBackground(bgColor());
-        slideshow.setBackground(bgColor());
 
 
-        slideshow.add(bannerPanl);
         slideshow.add(titlePanel);
-
+        slideshow.add(bannerPanl);
     }
 
     /**
@@ -332,14 +312,8 @@ public class FirstFile extends JFrame {
             }
 
         });
+
         add(MenuButton);
-
-        //        内容面板
-        JPanel contentp = new JPanel();
-        contentp.setPreferredSize(new Dimension(100,100));
-        contentp.setLayout(null);
-
-
     }
     /**
      * 主题
