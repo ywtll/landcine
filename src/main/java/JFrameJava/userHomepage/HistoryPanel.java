@@ -31,7 +31,6 @@ public class HistoryPanel extends JPanel {
 
 
             HistoyImagePanel p = new HistoyImagePanel(icon, name, time, detailed, 20, 20, cp.getWidth() / 2, cp.getWidth() / 2 / 3);
-//            HistoyImagePanel p = new HistoyImagePanel(icon, "齐天大声gyu jkhkjh ghj", "2002-10-29", "这是一部非常好看的电影",20, 20, 600, 200);
 
 
             p.setBounds(cp.getWidth() / 4, i * cp.getWidth() / 2 / 3 + i * 20, cp.getWidth() / 2, cp.getWidth() / 2 / 3);
@@ -39,7 +38,6 @@ public class HistoryPanel extends JPanel {
         }
 
         contentp.setBounds(0, 0, cp.getWidth(), cp.getHeight());
-//        cp.add(contentp);
 
 
         //        内容面板上的滚动条
