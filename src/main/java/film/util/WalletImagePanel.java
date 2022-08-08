@@ -6,8 +6,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class WalletImagePanel extends RoundPanel {
+    private Color enterColor = new Color(210,210,210);
+    private Color exitColor = new Color(255, 255, 255);
 
-    public WalletImagePanel(ImageIcon icon ,JLabel content, int arcWidth, int arcHeight, int width, int height) {
+    public Color getEnterColor() {
+        return enterColor;
+    }
+
+    public void setEnterColor(Color enterColor) {
+        this.enterColor = enterColor;
+    }
+
+    public Color getExitColor() {
+        return exitColor;
+    }
+
+    public void setExitColor(Color exitColor) {
+        this.exitColor = exitColor;
+    }
+
+    public WalletImagePanel(ImageIcon icon , JLabel content, int arcWidth, int arcHeight, int width, int height) {
         super(arcWidth,arcHeight);
         this.setLayout(null);
 //        this.setBackground(Color.red);
@@ -16,10 +34,10 @@ public class WalletImagePanel extends RoundPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                setBackground(new Color(210,210,210));
+                setBackground(enterColor);
             }
             public void mouseExited(MouseEvent e) {
-                setBackground(Color.white);
+                setBackground(exitColor);
             }
         });
 
