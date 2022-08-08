@@ -12,15 +12,12 @@ import film.util.SearchTextField;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
  * @author 712f
  */
 public class UserHomepage extends JFrame {
-
     /**
      * 邮箱id
      */
@@ -43,7 +40,7 @@ public class UserHomepage extends JFrame {
 
     /**
      * 连接数据库
-     * @implNote 防止第一次加载的卡顿
+     * @implNote 防止第一次加载的卡顿(待优化)
      */
     static {
         DButil.getConnection();
@@ -55,7 +52,7 @@ public class UserHomepage extends JFrame {
     static final int JFRAME_X = 200;
     static final int JFRAME_Y = 100;
     static final int JFRAME_WIDTH = 1200;
-    static final int JFRAME_HEIGHT = 800;
+    static final int JFRAME_HEIGHT = 840;
 
     public UserHomepage(String emailIDImage, JFrame firstFile) {
         this.firstFile = firstFile;
@@ -79,7 +76,7 @@ public class UserHomepage extends JFrame {
      * @implNote 初始化主题
      */
     private void theme() {
-        TheTheme theme = new TheTheme(1);
+        TheTheme theme = new TheTheme();
         // 导航区域
         rowPanel.setBackground(theme.getColorBg());
         // 头像区域
@@ -95,6 +92,7 @@ public class UserHomepage extends JFrame {
         // 搜索栏
         search.setColorBg(theme.getColorBg());
         search.setColorFont(theme.getColorFont());
+        search.setColorBorder(theme.getSearchColorImage());
     }
 
 
@@ -125,7 +123,6 @@ public class UserHomepage extends JFrame {
         rowPanelPrint();
         add(rowPanel);
 
-
         // 头像区域
         iconPanel = new JPanel();
         iconPanel.setBounds(0,JFRAME_HEIGHT/10,JFRAME_WIDTH/4, JFRAME_HEIGHT/4);
@@ -133,13 +130,11 @@ public class UserHomepage extends JFrame {
         iconPanelPrint();
         add(iconPanel);
 
-
         // 内容
         contentPanel = new JPanel();
         contentPanel.setLayout(null);
         contentPanel.setBounds(JFRAME_WIDTH/4,JFRAME_HEIGHT/10,JFRAME_WIDTH - JFRAME_WIDTH/4, JFRAME_HEIGHT - JFRAME_HEIGHT/10);
         add(contentPanel);
-
 
         // 列表区域
         listPanel = new JPanel();
@@ -244,7 +239,6 @@ public class UserHomepage extends JFrame {
 
     ImageIcon imgIcon;
     JLabel logo;
-    JPanel type;
     SearchTextField search;
     JButton ocr;
     ImageIcon imgLogo;
