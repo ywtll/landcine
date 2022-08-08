@@ -17,12 +17,6 @@ import Model.DZ_Movie_Information;
 import film.util.TitleJbutton;
 
 public class BannerPanl extends JPanel {
-
-
-    /*
-    幻灯片面板
-    * @author Moon
-    */
     ArrayList<DZ_Movie_Information> filmInfos=new ArrayList<>();
 
     private  int index=0;
@@ -69,6 +63,7 @@ public class BannerPanl extends JPanel {
         timer=timer1;
         tt=tt1;
     }
+
     //设置图片的方法
     private void setImage() {
         if(index>=filmInfos.size()){
@@ -84,22 +79,24 @@ public class BannerPanl extends JPanel {
         revalidate();
         index++;
     }
+
     //设置图片的方法
     private void setImage(int id) {
         DZ_Movie_Information film = filmInfos.get(id);
         ImageIcon icon=new ImageIcon(film.getY_Movie_Cover());
-        JLabel jLabel=new JLabel(icon);
+        jLabel=new JLabel(icon);
         jLabel.setBounds(0,0,800,330);
         removeAll();
         repaint();
         add(jLabel);
         revalidate();
     }
+
     public JPanel addTitlePanel(int id) {
         JPanel titlePanel = new JPanel();
-        titlePanel.setBounds(800,0,350,380);
+        titlePanel.setBounds(800,0,400,410);
         titlePanel.setLayout(null);
-        titlePanel.setBackground(new Color(215, 210, 210, 253));
+//        titlePanel.setBackground(new Color(215, 210, 210, 253));
         titlePanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -115,28 +112,35 @@ public class BannerPanl extends JPanel {
         for(DZ_Movie_Information f:filmInfos){
             index++;
             String title = f.getY_Name();
+
+            // 按钮
             TitleJbutton tb=new TitleJbutton(title);
-            tb.setBackground(new Color(187, 183, 183, 173));
+//            tb.setBackground(new Color(187, 183, 183, 173));
+            // 按钮颜色
+            tb.setBackground(new Color(155, 92, 92, 173));
+            // 设置无边框
             tb.setBorder(BorderFactory.createEmptyBorder());
+            // 字体颜色
             tb.setForeground(Color.white);
             tb.setFont(bf);
-            tb.setBounds(80,40*index,200,30);
+            tb.setBounds(100,45 * index,200,30);
+
+
             tb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     timer.cancel();
+//                    tb.setForeground(new Color(231, 0, 0));
+                    // 移动到上面的颜色
                     tb.setForeground(new Color(231, 0, 0));
                     that.setImage(f.getY_Id());
                 }
                 public void mouseExited(MouseEvent e){
 //                    reStartTimer();
+                    // 移出的颜色
                     tb.setForeground(Color.white);
                 }
             });
-
-
-
-
             tb.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -144,7 +148,6 @@ public class BannerPanl extends JPanel {
                 }
             });
             titlePanel.add(tb);
-
 
         }
         return titlePanel;
