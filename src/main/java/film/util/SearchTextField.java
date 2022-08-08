@@ -9,9 +9,9 @@ public class SearchTextField extends RoundPanel {
 
     private Color colorFont;
     private Color colorBg;
+    private Color colorBorder;
 
-    private Color searchColorFont;
-    private Color searchColorBg;
+
 
     JTextField jf=new JTextField();
     public SearchTextField(ImageIcon icon, int width, int height, Color bgColor) {
@@ -62,27 +62,21 @@ public class SearchTextField extends RoundPanel {
      */
     public SearchTextField(ImageIcon icon, int width, int height) {
         super(height, height);
-//        if (bgColor.equals(new Color(255,255,255))) {
-//            this.colorBg = new Color(214, 224, 210);
-//        } else {
-//            this.colorBg = new Color(51, 50, 50);
-//        }
+
         this.setSize(width,height);
         this.setLayout(null);
         this.setBackground(this.colorBg);
+
         JLabel imageLabel = new JLabel(icon);
         imageLabel.setBounds(10, 5, height-10, height-10);
-        imageLabel.setBackground(this.colorBg);
+        imageLabel.setBackground(this.colorBorder);
+
         jf.setBounds(height,0,width-height-10,height);
         jf.setBorder(BorderFactory.createEmptyBorder());
-        jf.setBackground(this.colorBg);
+        jf.setBackground(this.colorFont);
+
         jf.setText("输入你要查找的影片");
         jf.setFont(new Font("宋体", Font.BOLD, 18));
-//        if (bgColor.equals(new Color(255,255,255))) {
-//            jf.setForeground(new Color(0,0,0));
-//        } else {
-//            jf.setForeground(new Color(255,255,255));
-//        }
 
         jf.addFocusListener(new FocusListener() {
             @Override
@@ -122,5 +116,13 @@ public class SearchTextField extends RoundPanel {
 
     public void setColorBg(Color colorBg) {
         this.colorBg = colorBg;
+    }
+
+    public Color getColorBorder() {
+        return colorBorder;
+    }
+
+    public void setColorBorder(Color colorBorder) {
+        this.colorBorder = colorBorder;
     }
 }
