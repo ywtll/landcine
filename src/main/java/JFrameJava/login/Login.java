@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Login extends JDialog {
 
     // 是否发送邮箱
-    static final boolean is_SendEmail = true;
+    static final boolean is_SendEmail = false;
 
     static final int Login_x=450;
 
@@ -48,6 +48,7 @@ public class Login extends JDialog {
         setVisible(true);
     }
 
+    RoundRectJPasswordField mm;
     public String[] init(){
         final String[] ME = {null};
         final String[] U_yzm = {null};
@@ -58,7 +59,7 @@ public class Login extends JDialog {
         label2.setBounds(Login_w-290,Login_h-225,Login_w-350,Login_h-370);
         add(label2);
         /**密码文本宽*/
-        RoundRectTextField mm=new RoundRectTextField(new ImageIcon(),Login_w-450,Login_h-370,Color.lightGray);
+        mm=new RoundRectJPasswordField(new ImageIcon(),Login_w-450,Login_h-370,Color.lightGray);
         mm.setBounds(Login_w-300,Login_h-200,Login_w-350,Login_h-370);
 
         add(mm);
@@ -96,7 +97,6 @@ public class Login extends JDialog {
                             state =text2;
                             setVisible(false);
                             return ;
-
                         }
                     }
                     if ( dz_members.get(0).getU_Password().equals(text1)& "请输入密码".equals(label2.getText())){
@@ -114,8 +114,8 @@ public class Login extends JDialog {
             }
         });
         add(dl);
-        /**发送验证码按钮*/
 
+        /**发送验证码按钮*/
         MenuButton yzm=new MenuButton(null,"验证码",15,15,new Color(255, 255, 255),new Color(59, 125, 239),new Color(39, 87, 168),new Color(59, 125, 239));
         yzm.setBounds(mm.getX()+120,mm.getY(),120,30);
         yzm.addActionListener(new ActionListener() {
@@ -141,7 +141,6 @@ public class Login extends JDialog {
                     th1.start();
 
                     // 验证码倒计时
-
                     int time = 60;
                     MenuButton yzmq1=new MenuButton(null,String.valueOf(time),15,15,new Color(158, 161, 182),new Color(73, 75, 87),new Color(73, 75, 87),new Color(73, 75, 87),new Color(73, 75, 87));
 
@@ -177,13 +176,14 @@ public class Login extends JDialog {
             }
         });
         add(yzm);
+
         /**密码登录按钮*/
         MenuButton Password=new MenuButton(null,"密码登录",15,15,new Color(255, 255, 255),new Color(59, 125, 239),new Color(39, 87, 168),new Color(59, 125, 239));
         Password.setBounds(Login_w-300,Login_h-300,Login_w-500,Login_h-370);
         Password.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mm.setEcChar('*');
                 yzm.setVisible(false);
                 label4.setText("密码或账号输入错误");
                 label4.setVisible(false);
@@ -213,7 +213,7 @@ public class Login extends JDialog {
         Sms.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mm.setEcChar('\0');
                 yzm.setVisible(true);
                 label4.setVisible(false);
                 label4.setText("邮箱或验证码输入错误");
