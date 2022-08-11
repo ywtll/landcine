@@ -35,11 +35,12 @@ public class RoundRectTextField extends RoundPanel {
         jf.setBorder(BorderFactory.createEmptyBorder());
         this.add(jf);
     }
+
     public String getFieldText(){
         return jf.getText();
     }
-public void   setText(String text){
-        jf.setText(text);
 
-}
+    public void setText(String text) {
+        jf.setText(text);
+    }
 }
