@@ -90,9 +90,8 @@ public class UserHomepage extends JFrame {
         ocr.setBackground(theme.getColorBg());
 
         // 搜索栏
-        search.setColorBg(theme.getColorBg());
+        search.setColorBg(theme.getSearchColorImage());
         search.setColorFont(theme.getColorFont());
-        search.setColorBorder(theme.getSearchColorImage());
     }
 
 

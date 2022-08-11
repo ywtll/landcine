@@ -39,15 +39,15 @@ public class TheTheme {
    }
 
    public void theme1() {
-      colorFont = new Color(0,0,0);
+      colorFont = new Color(0, 0, 0);
       colorBg = new Color(255,255,255);
-      searchColorImage = new Color(152, 65, 65);
+      searchColorImage = new Color(150, 150, 150);
    }
 
    public void theme2() {
       colorFont = new Color(255,255,255);
       colorBg = new Color(0,0,0);
-      searchColorImage = new Color(178, 164, 164);
+      searchColorImage = new Color(145, 145, 145);
    }
 
 

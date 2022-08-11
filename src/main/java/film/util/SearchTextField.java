@@ -7,13 +7,20 @@ import java.awt.event.FocusListener;
 
 public class SearchTextField extends RoundPanel {
 
-    private Color colorFont;
+    /**
+     * landcine 0.1.0 bata后，已弃用
+     */
     private Color colorBg;
-    private Color colorBorder;
-
-
 
     JTextField jf=new JTextField();
+
+    /**
+     * landcine 0.1.0 bata后，已弃用
+     * @param icon
+     * @param width
+     * @param height
+     * @param bgColor
+     */
     public SearchTextField(ImageIcon icon, int width, int height, Color bgColor) {
         super(height, height);
         if (bgColor.equals(new Color(255,255,255))) {
@@ -54,6 +61,7 @@ public class SearchTextField extends RoundPanel {
 
     }
 
+    JLabel imageLabel;
     /**
      * @apiNote 712f
      * @param icon
@@ -65,15 +73,24 @@ public class SearchTextField extends RoundPanel {
 
         this.setSize(width,height);
         this.setLayout(null);
-        this.setBackground(this.colorBg);
+        /**
+         * 背景
+         */
+//        this.setBackground(this.colorBg);
+        this.setBackground(new Color(164, 255, 0));
 
-        JLabel imageLabel = new JLabel(icon);
+        imageLabel = new JLabel(icon);
         imageLabel.setBounds(10, 5, height-10, height-10);
-        imageLabel.setBackground(this.colorBorder);
+        /**
+         * 未知
+          */
+//        imageLabel.setBackground(this.colorBorder);
+//        imageLabel.setBackground(new Color(29, 0, 227, 55));
 
         jf.setBounds(height,0,width-height-10,height);
         jf.setBorder(BorderFactory.createEmptyBorder());
-        jf.setBackground(this.colorFont);
+        jf.setBackground(new Color(164, 255, 0));
+        jf.setForeground(new Color(168, 35, 35));
 
         jf.setText("输入你要查找的影片");
         jf.setFont(new Font("宋体", Font.BOLD, 18));
@@ -102,27 +119,15 @@ public class SearchTextField extends RoundPanel {
         jf.setText(text);
     }
 
-    public Color getColorFont() {
-        return colorFont;
-    }
 
     public void setColorFont(Color colorFont) {
-        this.colorFont = colorFont;
+        jf.setForeground(colorFont);
     }
 
-    public Color getColorBg() {
-        return colorBg;
-    }
 
     public void setColorBg(Color colorBg) {
-        this.colorBg = colorBg;
+        this.setBackground(colorBg);
+        jf.setBackground(colorBg);
     }
 
-    public Color getColorBorder() {
-        return colorBorder;
-    }
-
-    public void setColorBorder(Color colorBorder) {
-        this.colorBorder = colorBorder;
-    }
 }
