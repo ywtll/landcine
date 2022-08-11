@@ -3,6 +3,7 @@ package JFrameJava.first;
 import Dao.Dao_Member;
 import Dao.Dao_Movie_Hot;
 import Dao.Dao_Movie_Information;
+import Dao.TheTheme;
 import Dao.baiduOcr.FileChooserOCR2;
 import Dao.baiduOcr.ScreenShotTest;
 import JFrameJava.Briefintroduction.Introduction;
@@ -15,8 +16,6 @@ import film.util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -42,24 +41,45 @@ public class FirstFile extends JFrame {
 
     static Login login;
 
-    ImageIcon imgLogo;
-
-
-    Color darkColor;
-    Color lightColor;
-
-    Font lfont = new Font("宋体", Font.BOLD, 25);
-
     public FirstFile(){
         setTitle("首页");
         setLayout(null);
         setBounds(JFRAME_X, JFRAME_Y, JFRAME_WIDTH, JFRAME_HEIGHT);
 
+        // 初始化
         init();
+
+        // 初始化主题
+        theme();
 
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+    TheTheme theme = new TheTheme();
+    /**
+     * @implNote 初始化主题
+     */
+    private void theme() {
+        // 导航栏
+        rowPanel.setBackground(theme.getColorBg());
+
+        // OCR
+        ocr.setBackground(theme.getColorBg());
+
+        // 搜索栏
+        search.setColorBg(theme.getSearchColorImage());
+        search.setColorFont(theme.getColorFont());
+
+        content.setBackground(theme.getColorBg());
+
+
+        bannerPanl.setBackground(theme.getColorBg());
+
+        title.setForeground(theme.getColorFont());
+
+    }
+
 
     List<DZ_Member> dz_members;
     JPanel rowPanel;
@@ -73,7 +93,6 @@ public class FirstFile extends JFrame {
         rowPanel = new JPanel();
         rowPanel.setLayout(null);
         rowPanel.setBounds(0,0,JFRAME_WIDTH, JFRAME_HEIGHT/10);
-        rowPanel.setBackground(bgColor());
         rowPanelPrint();
         add(rowPanel);
 
@@ -88,7 +107,7 @@ public class FirstFile extends JFrame {
         // 内容面板
         content = new JPanel();
         content.setLayout(null);
-        content.setBounds(0,JFRAME_HEIGHT/10+JFRAME_HEIGHT/2-JFRAME_HEIGHT/10,JFRAME_WIDTH,JFRAME_HEIGHT/2-JFRAME_HEIGHT/10);
+        content.setBounds(0,JFRAME_HEIGHT/10+JFRAME_HEIGHT/2-JFRAME_HEIGHT/10,JFRAME_WIDTH,JFRAME_HEIGHT/2);
         contentPrint();
         add(content);
 
@@ -107,7 +126,6 @@ public class FirstFile extends JFrame {
         title = new JLabel("猜你喜欢");
         title.setBounds(50,5,200,30);
         title.setFont(new Font("宋体", Font.BOLD, 25));
-        title.setForeground(Color.BLACK);
         content.add(title);
 
         // 内容图片
@@ -116,19 +134,23 @@ public class FirstFile extends JFrame {
             HotPanel p = new HotPanel(icon, 10, 12, hotal.get(i).getR_Name());
             p.setPreferredSize(new Dimension(210,350));
             p.setBounds(70+i*280,40,210,350);
+            p.setTitleColor(Color.BLUE,theme.getColorFont());
+            p.setBackgroundColor(Color.LIGHT_GRAY,theme.getColorBg());
 
+
+            int finalI = i;
             p.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-//                    super.mouseClicked(e);
+                    List<DZ_Movie_Information> dz_movie_informations = Dao_Movie_Information.Movie_Information_Query(finalI);
+                    new Introduction(null,dz_movie_informations.get(0).getY_Id(), FirstFile.login.getReturnStatus());
                 }
             });
 
             content.add(p);
         }
-
-
     }
+
 
     Vector<DZ_Movie_Information> all;
     List<Integer> idList = new ArrayList<>();
@@ -169,39 +191,32 @@ public class FirstFile extends JFrame {
 
         titlePanel.setBackground(new Color(255,255,255,100));
 
-        bannerPanl.setBackground(bgColor());
-
-
         slideshow.add(titlePanel);
         slideshow.add(bannerPanl);
     }
 
+
+    ImageIcon imgIcon;
+    JLabel logo;
+    SearchTextField search;
+    JButton ocr;
+    ImageIcon imgLogo;
+    JLabel icon;
     /**
-     * 导航
+     * 导航区域
      */
     private void rowPanelPrint() {
         rowPanel.setLayout(null);
-        rowPanel.setBackground(lightColor);
         // logo
-        ImageIcon imgIcon = new ImageIcon("film/loginimg/logo.png");
-        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(), Image.SCALE_DEFAULT));
-        JLabel logo = new JLabel(imgIcon);
+        imgIcon = new ImageIcon("film/loginimg/logo.png");
+        imgIcon.setImage(imgIcon.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(),Image.SCALE_DEFAULT));
+        logo = new JLabel(imgIcon);
         logo.setBounds(rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
         rowPanel.add(logo);
 
-        // 分类
-        JPanel type = new JPanel();
-        type.setBounds(rowPanel.getHeight() + rowPanel.getHeight(),rowPanel.getHeight()/4,rowPanel.getWidth()/8, rowPanel.getHeight());
-        JLabel frontPage = new JLabel("首页");
-        frontPage.setFont(new Font("微软雅黑", Font.BOLD, type.getHeight()/3));
-        type.add(frontPage);
-
-        type.setBackground(bgColor());
-        rowPanel.add(type);
-
 
         // 搜索框
-        SearchTextField search = new SearchTextField(new ImageIcon("film/img/search1.png"),rowPanel.getWidth()/3,rowPanel.getHeight()/2,bgColor());
+        search = new SearchTextField(new ImageIcon("film/img/search1.png"),rowPanel.getWidth()/3,rowPanel.getHeight()/2);
         search.setBounds(rowPanel.getHeight() + rowPanel.getHeight() + rowPanel.getWidth()/8,rowPanel.getHeight()/4, rowPanel.getWidth()/3,rowPanel.getHeight()/2);
         rowPanel.add(search);
 
@@ -212,10 +227,8 @@ public class FirstFile extends JFrame {
 
 
         // 图片转文字模块
-
-        JButton ocr = new JButton(new ImageIcon("film/Walletimg/iconText.png"));
-        ocr.setBackground(lightColor);
-        ocr.setBounds( rowPanel.getHeight()*2 +  rowPanel.getWidth()/3*2,rowPanel.getHeight()/4 ,rowPanel.getHeight()/2,rowPanel.getHeight()/2);
+        ocr = new JButton(new ImageIcon("film/Walletimg/iconText.png"));
+        ocr.setBounds(rowPanel.getHeight()*2 +  rowPanel.getWidth()/3*2,rowPanel.getHeight()/4 ,rowPanel.getHeight()/2,rowPanel.getHeight()/2);
         rowPanel.add(ocr);
 
 
@@ -252,8 +265,8 @@ public class FirstFile extends JFrame {
         // 头像
         List<DZ_Member> dz_members = Dao_Member.Member_Query(userName);
         imgLogo = new ImageIcon(dz_members.get(0).getU_Icon());
-        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rowPanel.getHeight()/2,rowPanel.getHeight()/2,Image.SCALE_DEFAULT));
-        JLabel icon = new JLabel(imgLogo);
+        imgLogo.setImage(imgLogo.getImage().getScaledInstance(rowPanel.getHeight(),rowPanel.getHeight(),Image.SCALE_DEFAULT));
+        icon = new JLabel(imgLogo);
         icon.setBounds(rowPanel.getWidth() - rowPanel.getHeight() -rowPanel.getHeight()/2,0,rowPanel.getHeight(),rowPanel.getHeight());
         rowPanel.add(icon);
 
@@ -294,35 +307,26 @@ public class FirstFile extends JFrame {
         });
 
 
-        //搜索框功能
-        ImageIcon imageIcon=new ImageIcon("film/img/search.png");
-        MenuButton MenuButton=new MenuButton(imageIcon,"",50,50, Color.white,Color.lightGray,Color.lightGray,Color.lightGray);
-        MenuButton.setBounds(search.getX(),search.getY(),search.getHeight(),search.getHeight());
-        MenuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = search.getJf();
-                List<DZ_Movie_Information> dz_movie_informations = Dao_Movie_Information.Movie_Information_Query_name(name);
-                if (dz_movie_informations.size()==0){
-                    JOptionPane.showMessageDialog(firstFile,"未收入该影片");
-                }else {
-                    System.out.println(search);
-                    new Introduction(firstFile,dz_movie_informations.get(0).getY_Id(), FirstFile.login.getReturnStatus());
-                }
-            }
-
-        });
-
-        add(MenuButton);
-    }
-    /**
-     * 主题
-     */
-    private Color bgColor() {
-        darkColor = new Color(0,0,0);
-        lightColor = new Color(255,255,255);
-
-        return lightColor;
+//        //搜索框功能
+//        ImageIcon imageIcon=new ImageIcon("film/img/search.png");
+//        MenuButton MenuButton=new MenuButton(imageIcon,"",50,50, Color.white,Color.lightGray,Color.lightGray,Color.lightGray);
+//        MenuButton.setBounds(search.getX(),search.getY(),search.getHeight(),search.getHeight());
+//        MenuButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String name = search.getJf();
+//                List<DZ_Movie_Information> dz_movie_informations = Dao_Movie_Information.Movie_Information_Query_name(name);
+//                if (dz_movie_informations.size()==0){
+//                    JOptionPane.showMessageDialog(firstFile,"未收入该影片");
+//                }else {
+//                    System.out.println(search);
+//                    new Introduction(firstFile,dz_movie_informations.get(0).getY_Id(), FirstFile.login.getReturnStatus());
+//                }
+//            }
+//
+//        });
+//
+//        add(MenuButton);
     }
 
     public static void main(String[] args) {
